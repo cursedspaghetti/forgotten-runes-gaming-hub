@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forgotten Runes Gaming Hub — community games</title>
+<meta name="description" content="Every game built in the Runiverse by the Forgotten Runes community, in one place.">
+<meta property="og:title" content="Forgotten Runes Gaming Hub">
+<meta property="og:description" content="Every game built in the Runiverse by the Forgotten Runes community, in one place.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%23b06bff' d='M3 0h2v1H3zM2 1h4v1H2zM1 2h6v2H1zM2 4h4v1H2zM3 5h2v3H3z'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#07050f; --panel:#120c22; --edge:#2b1d4f; --ink:#efe6ff; --dim:#a596c9;
+    --gold:#ffd34d; --violet:#b06bff; --cyan:#7fe8ff;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; background:var(--bg); color:var(--ink); }
+  body{ font-family:'VT323',monospace; font-size:22px; line-height:1.25; min-height:100vh; }
+  #stars{ position:fixed; inset:0; z-index:0; image-rendering:pixelated; width:100%; height:100%; }
+  .wrap{ position:relative; z-index:1; max-width:1120px; margin:0 auto; padding:28px 18px 60px; }
+
+  header{ text-align:center; padding:26px 0 18px; }
+  .rune{ width:56px; height:56px; image-rendering:pixelated; display:block; margin:0 auto 18px; }
+  h1{ font-family:'Press Start 2P',monospace; font-size:clamp(18px,3.4vw,34px); line-height:1.5; margin:0;
+      letter-spacing:2px; text-shadow:3px 3px 0 #3a1a6e, 0 0 24px rgba(176,107,255,.55); }
+  h1 span{ color:var(--gold); }
+  .sub{ color:var(--dim); font-size:24px; margin:14px 0 0; }
+  .badge{ display:inline-block; font-family:'Press Start 2P',monospace; font-size:9px; letter-spacing:1px;
+          color:var(--cyan); border:2px solid var(--cyan); padding:6px 9px; margin-top:16px; box-shadow:3px 3px 0 #0d3b48; }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:22px; margin-top:34px; }
+  .card{ background:var(--panel); border:3px solid var(--edge); box-shadow:6px 6px 0 #000; display:flex; flex-direction:column;
+         transition:transform .12s steps(2), box-shadow .12s steps(2), border-color .12s; position:relative; }
+  .card:hover{ transform:translate(-3px,-3px); box-shadow:9px 9px 0 #000; border-color:var(--accent); }
+  .card canvas{ width:100%; aspect-ratio:16/7; display:block; image-rendering:pixelated; border-bottom:3px solid var(--edge); }
+  .card .body{ padding:16px 18px 18px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .num{ position:absolute; top:10px; left:10px; font-family:'Press Start 2P',monospace; font-size:10px; color:#000;
+        background:var(--accent); padding:5px 7px; box-shadow:3px 3px 0 #000; }
+  .card h2{ font-family:'Press Start 2P',monospace; font-size:14px; line-height:1.6; margin:0; color:var(--accent); }
+  .card p{ margin:0; color:var(--ink); }
+  .tags{ display:flex; flex-wrap:wrap; gap:6px; }
+  .tag{ font-family:'Press Start 2P',monospace; font-size:8px; color:var(--dim); border:2px solid var(--edge); padding:4px 6px; }
+  .tag.mine{ color:var(--gold); border-color:var(--gold); }
+  .play{ margin-top:auto; align-self:flex-start; font-family:'Press Start 2P',monospace; font-size:11px; color:#000; text-decoration:none;
+         background:var(--accent); padding:11px 14px; box-shadow:4px 4px 0 #000; letter-spacing:1px; }
+  .play:hover{ filter:brightness(1.15); }
+  .play:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 #000; }
+  .domain{ font-size:18px; color:var(--dim); word-break:break-all; }
+
+  /* il gioco principale occupa tutta la riga */
+  .card.featured{ grid-column:1 / -1; flex-direction:row; }
+  .card.featured canvas{ width:55%; aspect-ratio:auto; min-height:260px; border-bottom:0; border-right:3px solid var(--edge); }
+  .card.featured h2{ font-size:20px; }
+  .card.featured .ribbon{ font-family:'Press Start 2P',monospace; font-size:9px; color:var(--gold); letter-spacing:2px; }
+  @media (max-width:760px){
+    .card.featured{ flex-direction:column; }
+    .card.featured canvas{ width:100%; aspect-ratio:16/7; min-height:0; border-right:0; border-bottom:3px solid var(--edge); }
+  }
+
+  footer{ margin-top:46px; text-align:center; color:var(--dim); font-size:19px; }
+  footer b{ color:var(--ink); font-weight:normal; }
+  .submit{ display:inline-block; margin-top:14px; font-family:'Press Start 2P',monospace; font-size:9px; color:var(--violet);
+           border:2px solid var(--violet); padding:8px 10px; text-decoration:none; box-shadow:3px 3px 0 #2a0f4a; }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="wrap">
+  <header>
+    <canvas class="rune" id="rune" width="14" height="14"></canvas>
+    <h1>FORGOTTEN RUNES<br><span>GAMING HUB</span></h1>
+    <p class="sub">Every game built in the Runiverse by the community, in one place.</p>
+    <div class="badge">COMMUNITY MADE · UNOFFICIAL</div>
+  </header>
+
+  <main class="grid" id="games"></main>
+
+  <footer>
+    <p>A fan-made directory of games set in the <b>Forgotten Runes</b> universe.<br>
+       Each game belongs to its creators. Not affiliated with or endorsed by the Forgotten Runes team.</p>
+    <a class="submit" href="https://github.com/cursedspaghetti/forgotten-runes-gaming-hub/issues/new?title=Add%20my%20game" target="_blank" rel="noopener">BUILT A RUNIVERSE GAME? ADD IT</a>
+  </footer>
+</div>
+
+<script>
+// ── Elenco giochi (in ordine). Per aggiungerne uno basta una voce qui. ────────
+const GAMES = [
+  { title: 'Forgotten Runiverse', url: 'https://staging.runiverse.world/', featured: true,
+    desc: 'The main game: a free-to-play pixel-art fantasy MMO set in the world of the Forgotten Runes Wizard\'s Cult. Adventure, fight and craft across the Runiverse.',
+    tags: ['MMO', 'RPG', 'BROWSER'], accent: '#ffd34d', theme: 'castle' },
+  { title: 'Runes TCG', url: 'https://www.runes-tcg.com/',
+    desc: 'A strategic 1v1 trading card game set in the Runiverse: collect cards and outplay opponents on a tactical grid.',
+    tags: ['CARD GAME', 'PVP', 'BROWSER'], accent: '#7fe8ff', theme: 'cards' },
+  { title: 'Breadventure', url: 'https://store.steampowered.com/app/3941330/Breadventure/',
+    desc: 'A party-based RPG by Feckless: you are a loaf of bread on the way to becoming a legend. Recruit companions, fight, cook and schmooze your way to the top.',
+    tags: ['RPG', 'PC · STEAM', 'COMING SOON'], accent: '#ffb46a', theme: 'bread' },
+  { title: 'Rebel Shadows', url: 'https://www.rebel-shadows.xyz/', mine: true,
+    desc: 'A pixel-art action roguelite: play your wizard, charge the Shadows Heart with elemental magic, survive the waves and take down the bosses.',
+    tags: ['ACTION', 'ROGUELITE', 'BROWSER'], accent: '#b06bff', theme: 'shadow' },
+  { title: 'Forgotten Runes: Demiurge', url: 'https://demiurge-demo-production.up.railway.app/',
+    desc: 'A community-made Runiverse game, playable as a browser demo.',
+    tags: ['DEMO', 'BROWSER'], accent: '#7dff8a', theme: 'forge' },
+  { title: 'Ichor & Ashes', url: 'https://ichor-and-ashes.vercel.app/',
+    desc: 'A community-made Runiverse game, playable in the browser.',
+    tags: ['BROWSER'], accent: '#ff5a6a', theme: 'ash' },
+];
+
+// ── Rendering delle card ─────────────────────────────────────────────────────
+const host = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (_) { return u; } };
+const grid = document.getElementById('games');
+GAMES.forEach((g, i) => {
+  const el = document.createElement('article');
+  el.className = 'card' + (g.featured ? ' featured' : '');
+  el.style.setProperty('--accent', g.accent);
+  el.innerHTML = `
+    <div class="num">${String(i + 1).padStart(2, '0')}</div>
+    <canvas width="160" height="70"></canvas>
+    <div class="body">
+      ${g.featured ? '<div class="ribbon">★ THE MAIN GAME</div>' : ''}
+      <h2>${g.title}</h2>
+      <p>${g.desc}</p>
+      <div class="tags">${g.tags.map(t => `<span class="tag">${t}</span>`).join('')}${g.mine ? '<span class="tag mine">BY CURSED SPAGHETTI</span>' : ''}</div>
+      <div class="domain">${host(g.url)}</div>
+      <a class="play" href="${g.url}" target="_blank" rel="noopener">${g.url.includes('steampowered') ? '▶ VIEW ON STEAM' : '▶ PLAY'}</a>
+    </div>`;
+  grid.appendChild(el);
+  drawBanner(el.querySelector('canvas'), g, i);
+});
+
+// ── Banner pixel art generati (nessuna immagine esterna) ────────────────────
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+function drawBanner(cv, g, idx) {
+  const c = cv.getContext('2d'), W = cv.width, H = cv.height, r = rng(idx * 977 + 13);
+  const acc = g.accent;
+  // cielo a bande
+  const bands = ['#0b0718', '#120a26', '#1a0f36', '#241448'];
+  bands.forEach((col, k) => { c.fillStyle = col; c.fillRect(0, Math.floor(k * H / 4), W, Math.ceil(H / 4)); });
+  // stelle
+  for (let s = 0; s < 70; s++) { c.fillStyle = r() < 0.2 ? acc : '#d9ccff'; c.fillRect(Math.floor(r() * W), Math.floor(r() * H * 0.6), 1, 1); }
+  // luna
+  c.fillStyle = '#fff3c4'; for (let y = -4; y <= 4; y++) for (let x = -4; x <= 4; x++) if (x * x + y * y <= 17 && (x + 2) * (x + 2) + y * y > 12) c.fillRect(W - 22 + x, 12 + y, 1, 1);
+  // colline lontane
+  c.fillStyle = '#1b0f33';
+  for (let x = 0; x < W; x++) { const h = 14 + Math.round(Math.sin(x * 0.07 + idx) * 5 + Math.sin(x * 0.19) * 2); c.fillRect(x, H - h - 12, 1, h + 12); }
+  // terreno
+  c.fillStyle = '#0d081b'; c.fillRect(0, H - 12, W, 12);
+  c.fillStyle = acc; c.globalAlpha = 0.35; c.fillRect(0, H - 12, W, 1); c.globalAlpha = 1;
+  const cx = Math.floor(W / 2), gy = H - 12;
+  const px = (x, y, col) => { c.fillStyle = col; c.fillRect(x, y, 1, 1); };
+  const rect = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+  switch (g.theme) {
+    case 'castle': // torri del Runiverse
+      [[-30, 22], [-14, 34], [0, 44], [14, 30], [30, 24]].forEach(([dx, h], k) => {
+        rect(cx + dx - 5, gy - h, 10, h, '#2a1b52'); rect(cx + dx - 6, gy - h - 3, 12, 3, '#3a2770');
+        for (let b = 0; b < 3; b++) rect(cx + dx - 6 + b * 5, gy - h - 5, 2, 2, '#3a2770');
+        for (let w = 0; w < h / 9; w++) rect(cx + dx - 1, gy - h + 5 + w * 8, 2, 3, r() < 0.7 ? acc : '#1b1236');
+      });
+      rect(cx - 1, gy - 52, 2, 8, '#3a2770'); rect(cx + 1, gy - 52, 6, 3, acc);
+      break;
+    case 'cards': // tre carte a ventaglio
+      [-22, 0, 22].forEach((dx, k) => {
+        const x = cx + dx - 11, y = gy - 40 + Math.abs(dx) / 4;
+        rect(x - 1, y - 1, 24, 34, '#000'); rect(x, y, 22, 32, '#efe6ff'); rect(x + 2, y + 2, 18, 28, k === 1 ? acc : '#3a2770');
+        for (let yy = 0; yy < 5; yy++) for (let xx = -yy; xx <= yy; xx++) px(x + 11 + xx, y + 10 + yy, k === 1 ? '#0b0718' : acc);
+        for (let yy = 0; yy < 4; yy++) for (let xx = -(3 - yy); xx <= 3 - yy; xx++) px(x + 11 + xx, y + 15 + yy, k === 1 ? '#0b0718' : acc);
+      });
+      break;
+    case 'bread': // pagnotta eroe con spada
+      for (let y = -9; y <= 9; y++) for (let x = -14; x <= 14; x++) if ((x * x) / 196 + (y * y) / 81 <= 1) px(cx + x, gy - 12 + y, y < -4 ? '#c98a3a' : '#e8a95a');
+      for (let k = -2; k <= 2; k++) rect(cx + k * 5 - 1, gy - 19, 3, 1, '#8a5422');
+      rect(cx - 5, gy - 13, 2, 2, '#000'); rect(cx + 4, gy - 13, 2, 2, '#000'); rect(cx - 2, gy - 9, 5, 1, '#5a3010');
+      rect(cx + 17, gy - 34, 2, 22, '#d9e6ff'); rect(cx + 14, gy - 13, 8, 2, acc);
+      break;
+    case 'shadow': // wizard d'ombra con il cuore luminoso
+      for (let y = 0; y < 30; y++) { const w = Math.floor(y / 2) + 2; rect(cx - w, gy - 30 + y, w * 2, 1, '#1a0b33'); }
+      rect(cx - 14, gy - 34, 28, 4, '#1a0b33'); for (let y = 0; y < 14; y++) rect(cx - Math.floor((14 - y) / 2), gy - 48 + y, 14 - y, 1, '#1a0b33');
+      rect(cx - 4, gy - 26, 2, 2, acc); rect(cx + 2, gy - 26, 2, 2, acc);
+      for (let y = -4; y <= 4; y++) for (let x = -4; x <= 4; x++) if (x * x + y * y <= 16) px(cx + 20 + x, gy - 22 + y, x * x + y * y < 5 ? '#fff' : acc);
+      c.globalAlpha = 0.25; for (let y = -9; y <= 9; y++) for (let x = -9; x <= 9; x++) if (x * x + y * y <= 81) px(cx + 20 + x, gy - 22 + y, acc); c.globalAlpha = 1;
+      break;
+    case 'forge': // incudine e scintille creatrici
+      rect(cx - 18, gy - 14, 36, 6, '#3a3550'); rect(cx - 10, gy - 8, 20, 8, '#2a2540'); rect(cx - 24, gy - 14, 8, 3, '#3a3550');
+      for (let s = 0; s < 24; s++) { const a = r() * Math.PI, d = 6 + r() * 26; px(cx + Math.round(Math.cos(a) * d), gy - 16 - Math.round(Math.sin(a) * d), r() < 0.5 ? acc : '#fff3c4'); }
+      for (let y = -5; y <= 5; y++) for (let x = -5; x <= 5; x++) if (Math.abs(x) + Math.abs(y) <= 5) px(cx + x, gy - 36 + y, Math.abs(x) + Math.abs(y) < 2 ? '#fff' : acc);
+      break;
+    case 'ash': // fiamme e cenere
+      for (let x = -26; x <= 26; x++) { const h = 10 + Math.round(Math.abs(Math.sin(x * 0.4)) * 18 * (1 - Math.abs(x) / 30)); for (let y = 0; y < h; y++) px(cx + x, gy - y - 1, y > h - 4 ? '#fff3c4' : y > h * 0.5 ? acc : '#7a1020'); }
+      for (let s = 0; s < 30; s++) px(Math.floor(r() * W), Math.floor(r() * (H - 20)), r() < 0.5 ? '#8a8a9a' : '#5a5a6a');
+      break;
+  }
+  // cornice interna
+  c.fillStyle = acc; c.globalAlpha = 0.6; c.fillRect(0, 0, W, 1); c.fillRect(0, H - 1, W, 1); c.fillRect(0, 0, 1, H); c.fillRect(W - 1, 0, 1, H); c.globalAlpha = 1;
+}
+
+// ── Runa del titolo ─────────────────────────────────────────────────────────
+(() => {
+  const c = document.getElementById('rune').getContext('2d');
+  const G = ['......##......', '.....####.....', '....##..##....', '...##.##.##...', '..##..##..##..', '.##...##...##.', '##....##....##',
+             '.##...##...##.', '..##..##..##..', '...##.##.##...', '....##..##....', '.....####.....', '......##......', '..............'];
+  G.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === '#') { c.fillStyle = (x + y) % 3 ? '#b06bff' : '#ffd34d'; c.fillRect(x, y, 1, 1); } }));
+})();
+
+// ── Cielo stellato animato (pixel) ──────────────────────────────────────────
+(() => {
+  const cv = document.getElementById('stars'), c = cv.getContext('2d');
+  let stars = [];
+  function resize() {
+    cv.width = Math.ceil(innerWidth / 3); cv.height = Math.ceil(innerHeight / 3);
+    stars = Array.from({ length: Math.floor(cv.width * cv.height / 260) }, () => ({ x: Math.random() * cv.width, y: Math.random() * cv.height, p: Math.random() * 6.28, s: Math.random() < 0.1 }));
+  }
+  resize(); addEventListener('resize', resize);
+  (function frame(t) {
+    c.fillStyle = '#07050f'; c.fillRect(0, 0, cv.width, cv.height);
+    for (const s of stars) {
+      const a = 0.35 + 0.65 * Math.abs(Math.sin(t / 900 + s.p));
+      c.globalAlpha = a; c.fillStyle = s.s ? '#b06bff' : '#cfc4ff';
+      c.fillRect(Math.floor(s.x), Math.floor(s.y), 1, 1);
+    }
+    c.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  })(0);
+})();
+</script>
+</body>
+</html>

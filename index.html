@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Forgotten Runes Gaming Hub — community games</title>
+<title>Forgotten Runes Wizard's Cult — Gaming Hub</title>
 <meta name="description" content="Every game built in the Runiverse by the Forgotten Runes community, in one place.">
-<meta property="og:title" content="Forgotten Runes Gaming Hub">
+<meta property="og:title" content="Forgotten Runes Wizard's Cult — Gaming Hub">
 <meta property="og:description" content="Every game built in the Runiverse by the Forgotten Runes community, in one place.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,8 +37,12 @@
   .card:hover{ transform:translate(-3px,-3px); box-shadow:9px 9px 0 #000; border-color:var(--accent); }
   .card canvas{ width:100%; aspect-ratio:16/7; display:block; image-rendering:pixelated; border-bottom:3px solid var(--edge); }
   .card .body{ padding:16px 18px 18px; display:flex; flex-direction:column; gap:10px; flex:1; }
-  .num{ position:absolute; top:10px; left:10px; font-family:'Press Start 2P',monospace; font-size:10px; color:#000;
+  .num{ z-index:2; position:absolute; top:10px; left:10px; font-family:'Press Start 2P',monospace; font-size:10px; color:#000;
         background:var(--accent); padding:5px 7px; box-shadow:3px 3px 0 #000; }
+  .art{ position:relative; }
+  .card.featured .art{ width:55%; }
+  .ph{ position:absolute; bottom:12px; right:10px; font-family:'Press Start 2P',monospace; font-size:7px; color:var(--dim);
+        background:rgba(7,5,15,.8); border:1px solid var(--edge); padding:4px 6px; letter-spacing:1px; }
   .card h2{ font-family:'Press Start 2P',monospace; font-size:14px; line-height:1.6; margin:0; color:var(--accent); }
   .card p{ margin:0; color:var(--ink); }
   .tags{ display:flex; flex-wrap:wrap; gap:6px; }
@@ -52,11 +56,12 @@
 
   /* il gioco principale occupa tutta la riga */
   .card.featured{ grid-column:1 / -1; flex-direction:row; }
-  .card.featured canvas{ width:55%; aspect-ratio:auto; min-height:260px; border-bottom:0; border-right:3px solid var(--edge); }
+  .card.featured canvas{ width:100%; height:100%; aspect-ratio:auto; min-height:260px; border-bottom:0; border-right:3px solid var(--edge); }
   .card.featured h2{ font-size:20px; }
   .card.featured .ribbon{ font-family:'Press Start 2P',monospace; font-size:9px; color:var(--gold); letter-spacing:2px; }
   @media (max-width:760px){
     .card.featured{ flex-direction:column; }
+    .card.featured .art{ width:100%; }
     .card.featured canvas{ width:100%; aspect-ratio:16/7; min-height:0; border-right:0; border-bottom:3px solid var(--edge); }
   }
 
@@ -71,7 +76,7 @@
 <div class="wrap">
   <header>
     <canvas class="rune" id="rune" width="14" height="14"></canvas>
-    <h1>FORGOTTEN RUNES<br><span>GAMING HUB</span></h1>
+    <h1>FORGOTTEN RUNES<br>WIZARD'S CULT<br><span>GAMING HUB</span></h1>
     <p class="sub">Every game built in the Runiverse by the community, in one place.</p>
     <div class="badge">COMMUNITY MADE · UNOFFICIAL</div>
   </header>
@@ -81,7 +86,6 @@
   <footer>
     <p>A fan-made directory of games set in the <b>Forgotten Runes</b> universe.<br>
        Each game belongs to its creators. Not affiliated with or endorsed by the Forgotten Runes team.</p>
-    <a class="submit" href="https://github.com/cursedspaghetti/forgotten-runes-gaming-hub/issues/new?title=Add%20my%20game" target="_blank" rel="noopener">BUILT A RUNIVERSE GAME? ADD IT</a>
   </footer>
 </div>
 
@@ -117,7 +121,7 @@ GAMES.forEach((g, i) => {
   el.style.setProperty('--accent', g.accent);
   el.innerHTML = `
     <div class="num">${String(i + 1).padStart(2, '0')}</div>
-    <canvas width="160" height="70"></canvas>
+    <div class="art"><canvas width="160" height="70"></canvas><div class="ph">PLACEHOLDER ART</div></div>
     <div class="body">
       ${g.featured ? '<div class="ribbon">★ THE MAIN GAME</div>' : ''}
       <h2>${g.title}</h2>
@@ -148,49 +152,26 @@ function drawBanner(cv, g, idx) {
   // terreno
   c.fillStyle = '#0d081b'; c.fillRect(0, H - 12, W, 12);
   c.fillStyle = acc; c.globalAlpha = 0.35; c.fillRect(0, H - 12, W, 1); c.globalAlpha = 1;
+  // Immagine PLACEHOLDER: un semplice cappello da mago, uguale per tutti, nel colore del gioco.
   const cx = Math.floor(W / 2), gy = H - 12;
-  const px = (x, y, col) => { c.fillStyle = col; c.fillRect(x, y, 1, 1); };
-  const rect = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
-  switch (g.theme) {
-    case 'castle': // torri del Runiverse
-      [[-30, 22], [-14, 34], [0, 44], [14, 30], [30, 24]].forEach(([dx, h], k) => {
-        rect(cx + dx - 5, gy - h, 10, h, '#2a1b52'); rect(cx + dx - 6, gy - h - 3, 12, 3, '#3a2770');
-        for (let b = 0; b < 3; b++) rect(cx + dx - 6 + b * 5, gy - h - 5, 2, 2, '#3a2770');
-        for (let w = 0; w < h / 9; w++) rect(cx + dx - 1, gy - h + 5 + w * 8, 2, 3, r() < 0.7 ? acc : '#1b1236');
-      });
-      rect(cx - 1, gy - 52, 2, 8, '#3a2770'); rect(cx + 1, gy - 52, 6, 3, acc);
-      break;
-    case 'cards': // tre carte a ventaglio
-      [-22, 0, 22].forEach((dx, k) => {
-        const x = cx + dx - 11, y = gy - 40 + Math.abs(dx) / 4;
-        rect(x - 1, y - 1, 24, 34, '#000'); rect(x, y, 22, 32, '#efe6ff'); rect(x + 2, y + 2, 18, 28, k === 1 ? acc : '#3a2770');
-        for (let yy = 0; yy < 5; yy++) for (let xx = -yy; xx <= yy; xx++) px(x + 11 + xx, y + 10 + yy, k === 1 ? '#0b0718' : acc);
-        for (let yy = 0; yy < 4; yy++) for (let xx = -(3 - yy); xx <= 3 - yy; xx++) px(x + 11 + xx, y + 15 + yy, k === 1 ? '#0b0718' : acc);
-      });
-      break;
-    case 'bread': // pagnotta eroe con spada
-      for (let y = -9; y <= 9; y++) for (let x = -14; x <= 14; x++) if ((x * x) / 196 + (y * y) / 81 <= 1) px(cx + x, gy - 12 + y, y < -4 ? '#c98a3a' : '#e8a95a');
-      for (let k = -2; k <= 2; k++) rect(cx + k * 5 - 1, gy - 19, 3, 1, '#8a5422');
-      rect(cx - 5, gy - 13, 2, 2, '#000'); rect(cx + 4, gy - 13, 2, 2, '#000'); rect(cx - 2, gy - 9, 5, 1, '#5a3010');
-      rect(cx + 17, gy - 34, 2, 22, '#d9e6ff'); rect(cx + 14, gy - 13, 8, 2, acc);
-      break;
-    case 'shadow': // wizard d'ombra con il cuore luminoso
-      for (let y = 0; y < 30; y++) { const w = Math.floor(y / 2) + 2; rect(cx - w, gy - 30 + y, w * 2, 1, '#1a0b33'); }
-      rect(cx - 14, gy - 34, 28, 4, '#1a0b33'); for (let y = 0; y < 14; y++) rect(cx - Math.floor((14 - y) / 2), gy - 48 + y, 14 - y, 1, '#1a0b33');
-      rect(cx - 4, gy - 26, 2, 2, acc); rect(cx + 2, gy - 26, 2, 2, acc);
-      for (let y = -4; y <= 4; y++) for (let x = -4; x <= 4; x++) if (x * x + y * y <= 16) px(cx + 20 + x, gy - 22 + y, x * x + y * y < 5 ? '#fff' : acc);
-      c.globalAlpha = 0.25; for (let y = -9; y <= 9; y++) for (let x = -9; x <= 9; x++) if (x * x + y * y <= 81) px(cx + 20 + x, gy - 22 + y, acc); c.globalAlpha = 1;
-      break;
-    case 'forge': // incudine e scintille creatrici
-      rect(cx - 18, gy - 14, 36, 6, '#3a3550'); rect(cx - 10, gy - 8, 20, 8, '#2a2540'); rect(cx - 24, gy - 14, 8, 3, '#3a3550');
-      for (let s = 0; s < 24; s++) { const a = r() * Math.PI, d = 6 + r() * 26; px(cx + Math.round(Math.cos(a) * d), gy - 16 - Math.round(Math.sin(a) * d), r() < 0.5 ? acc : '#fff3c4'); }
-      for (let y = -5; y <= 5; y++) for (let x = -5; x <= 5; x++) if (Math.abs(x) + Math.abs(y) <= 5) px(cx + x, gy - 36 + y, Math.abs(x) + Math.abs(y) < 2 ? '#fff' : acc);
-      break;
-    case 'ash': // fiamme e cenere
-      for (let x = -26; x <= 26; x++) { const h = 10 + Math.round(Math.abs(Math.sin(x * 0.4)) * 18 * (1 - Math.abs(x) / 30)); for (let y = 0; y < h; y++) px(cx + x, gy - y - 1, y > h - 4 ? '#fff3c4' : y > h * 0.5 ? acc : '#7a1020'); }
-      for (let s = 0; s < 30; s++) px(Math.floor(r() * W), Math.floor(r() * (H - 20)), r() < 0.5 ? '#8a8a9a' : '#5a5a6a');
-      break;
+  const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16); const f = (v) => Math.max(0, Math.min(255, Math.round(v * k)));
+    return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`; };
+  const hatH = 40, brimW = 36, tipX = cx + 6;
+  // cono (leggermente piegato in punta)
+  for (let y = 0; y < hatH; y++) {
+    const t = y / hatH;                       // 0 = punta, 1 = base
+    const half = Math.max(1, Math.round(2 + t * 13));
+    const bend = Math.round((1 - t) * (1 - t) * 8);
+    const x0 = Math.round(cx + (tipX - cx) * (1 - t)) + bend - half;
+    c.fillStyle = shade(acc, 0.55); c.fillRect(x0, gy - 8 - hatH + y, half * 2, 1);
+    c.fillStyle = shade(acc, 0.85); c.fillRect(x0, gy - 8 - hatH + y, Math.max(1, Math.round(half * 0.7)), 1);
   }
+  // fascia
+  c.fillStyle = acc; c.fillRect(cx - 15, gy - 13, 30, 4);
+  // tesa
+  for (let y = 0; y < 5; y++) { const w = brimW - Math.abs(y - 2) * 4; c.fillStyle = y < 2 ? shade(acc, 0.7) : shade(acc, 0.45); c.fillRect(cx - Math.round(w / 2), gy - 9 + y, w, 1); }
+  // ombra a terra
+  c.fillStyle = 'rgba(0,0,0,0.35)'; c.fillRect(cx - 16, gy - 3, 32, 2);
   // cornice interna
   c.fillStyle = acc; c.globalAlpha = 0.6; c.fillRect(0, 0, W, 1); c.fillRect(0, H - 1, W, 1); c.fillRect(0, 0, 1, H); c.fillRect(W - 1, 0, 1, H); c.globalAlpha = 1;
 }
